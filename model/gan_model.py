@@ -1,6 +1,7 @@
 #Utils
 import numpy as np
-from utils import MAX_LEN
+from utils.utils import MAX_LEN, ohe, escalon_matrix
+import pandas as pd
 
 #Model
 from keras.layers import Input, Dense, Reshape, Flatten
@@ -87,8 +88,25 @@ class GAN():
         validity = model(img)
 
         return Model(img, validity)
+    
+    def generate(self, n_gens):
 
-        X_train = np.array(ohes_pos)
+        pred_gen = []
+        for i in range(n_gens):
+            lantent_dim_conditional_vector =  np.random.normal(0, 1, (1, 100))
+            gen_imgs = self.generator.predict(  lantent_dim_conditional_vector  )
+            output_sequence = ohe.inverse_transform(escalon_matrix(gen_imgs[0,:,:,0]))
+            output_sequence_str = ""
+            for i in output_sequence:
+                if str(i[0]) == '_':
+                    break
+                else:
+                    output_sequence_str += str(i[0])
+            pred_gen.append(output_sequence_str)
+        df_gen = pd.DataFrame({"sequence":pred_gen})
+        
+        return df_gen
+
     def train(self, ohes_pos, epochs, batch_size=128, sample_interval=50):
 
         # Load the dataset
@@ -136,6 +154,9 @@ class GAN():
 
             # Plot the progress
             self.epochs.append(epoch)
-            self.glosses.append(g_loss)
+            self.glosses.append(g_loss[0])
             self.dlosses.append(d_loss[0])
-            print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
+            print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss[0]))
+
+    
+
