@@ -1,7 +1,6 @@
 #Utils
 import numpy as np
 import pandas as pd
-import joblib
 
 #Preprocesing
 from sklearn.preprocessing import OneHotEncoder
