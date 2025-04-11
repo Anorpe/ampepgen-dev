@@ -1,5 +1,5 @@
 # AmPepGen
-MultiPepGen is a model for generating synthetic sequences of antimicrobial peptides using a neural network with a GAN architecture.
+AmPepGen is a model for generating synthetic sequences of antimicrobial peptides using a neural network with a GAN architecture.
 
 # Contents
 - `data/data_sample.csv` : CSV file with example sequences to test the scripts.
